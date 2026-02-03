@@ -521,8 +521,57 @@ export default function EventoPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* Header/Navbar */}
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-lg">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo BMA */}
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
+                <Scale className="w-6 h-6 text-black" />
+              </div>
+              <div className="hidden sm:block">
+                <div className="text-white font-bold leading-tight">Barra Mexicana</div>
+                <div className="text-amber-400 text-xs">Colegio de Abogados</div>
+              </div>
+            </Link>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
+              <Link href="#agenda" className="text-sm text-slate-300 hover:text-amber-400 transition-colors">
+                Programa
+              </Link>
+              <Link href="#ponentes" className="text-sm text-slate-300 hover:text-amber-400 transition-colors">
+                Ponentes
+              </Link>
+              <Link href="#registro" className="text-sm text-slate-300 hover:text-amber-400 transition-colors">
+                Inscripción
+              </Link>
+              <Link href="https://www.bma.org.mx" target="_blank" className="text-sm text-slate-300 hover:text-amber-400 transition-colors flex items-center gap-1">
+                BMA.org.mx <ExternalLink className="w-3 h-3" />
+              </Link>
+            </nav>
+
+            {/* CTA */}
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="hidden sm:block">
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/10">
+                  Mi Cuenta
+                </Button>
+              </Link>
+              <Link href="#registro">
+                <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">
+                  <Ticket className="w-4 h-4 mr-1" />
+                  Inscribirme
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden pt-16">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
         <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10" />
