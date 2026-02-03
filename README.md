@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EventApp - Plataforma de Gestión de Eventos con IA
 
-## Getting Started
+Plataforma SaaS moderna para gestión de eventos con networking inteligente, navegación indoor y analíticas en tiempo real.
 
-First, run the development server:
+## Stack Tecnológico
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Frontend:** Next.js 14 (App Router) + Tailwind CSS + Shadcn/UI
+- **Backend:** Server Actions + Drizzle ORM
+- **Base de Datos:** Neon PostgreSQL (Serverless)
+- **Auth:** NextAuth.js
+- **Deploy:** Vercel
+
+## Funcionalidades
+
+### Para Asistentes
+- Registro con perfilado progresivo
+- Agenda inteligente con detección de conflictos
+- Networking con IA (matchmaking estilo Tinder)
+- Navegación indoor con beacons
+- Gamificación con puntos y leaderboards
+
+### Para Organizadores
+- Dashboard con métricas en tiempo real
+- Mapas de calor de asistencia
+- Gestión de agenda y speakers
+- Exportación de datos
+
+## Arquitectura
+
+```
+src/
+├── app/                  # Páginas Next.js (App Router)
+├── features/             # Feature-Sliced Design
+│   ├── registration/     # Registro de asistentes
+│   ├── agenda/           # Agenda inteligente
+│   ├── networking/       # Matchmaking con IA
+│   ├── navigation/       # Navegación indoor
+│   └── analytics/        # Dashboard organizadores
+└── shared/
+    ├── db/               # Schema + RLS policies
+    └── lib/              # Auth + utilities
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Seguridad
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Multi-Tenant:** Row-Level Security (RLS) a nivel de base de datos
+- **Aislamiento:** Cada organizador tiene datos completamente separados
+- **Auth:** JWT con NextAuth.js
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Instalación
 
-## Learn More
+```bash
+# Clonar repositorio
+git clone https://github.com/TU_USUARIO/eventapp-saas.git
+cd eventapp-saas
 
-To learn more about Next.js, take a look at the following resources:
+# Instalar dependencias
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Configurar variables de entorno
+cp .env.example .env.local
+# Editar .env.local con tus credenciales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Ejecutar migraciones
+npx drizzle-kit push
 
-## Deploy on Vercel
+# Iniciar desarrollo
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Variables de Entorno
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+# Base de datos (Neon)
+DATABASE_URL=postgresql://...
+
+# Auth
+NEXTAUTH_SECRET=...
+NEXTAUTH_URL=http://localhost:3000
+
+# Integraciones (opcionales)
+SENDGRID_API_KEY=...
+STRIPE_SECRET_KEY=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+```
+
+## Deploy en Vercel
+
+1. Conecta tu repositorio a Vercel
+2. Configura las variables de entorno
+3. Deploy automático en cada push
+
+```bash
+vercel
+```
+
+## Licencia
+
+MIT
