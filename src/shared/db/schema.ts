@@ -1,10 +1,44 @@
-import { pgTable, uuid, text, timestamp, boolean, integer, jsonb, real } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, timestamp, boolean, integer, jsonb, real, decimal, date } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // ============================================
 // MULTI-TENANT: Todas las tablas tienen tenant_id
 // Usar withTenantContext() para todas las queries
 // ============================================
+
+// ============================================
+// BMA 2026: Tablas para gestión de paquetes y registro
+// ============================================
+
+// Paquetes del Congreso BMA
+export const packages = pgTable('packages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  eventId: uuid('event_id').references(() => events.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(), // "TODO INCLUIDO", "SESIONES ACADÉMICAS", "ACOMPAÑANTES"
+  slug: text('slug').notNull(), // "todo-incluido", "sesiones-academicas", "acompanantes"
+  description: text('description'),
+  features: jsonb('features').$type<string[]>(), // Array de características incluidas
+  intranetUrl: text('intranet_url'), // URL de pago en intranet BMA
+  sortOrder: integer('sort_order').default(0),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Precios por período y tipo de usuario
+export const packagePricing = pgTable('package_pricing', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  packageId: uuid('package_id').notNull().references(() => packages.id, { onDelete: 'cascade' }),
+  userType: text('user_type').notNull(), // "barrista" | "no_barrista"
+  periodName: text('period_name').notNull(), // "Precio Temprano", "Precio Normal"
+  periodStart: date('period_start').notNull(),
+  periodEnd: date('period_end').notNull(),
+  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+  includesIva: boolean('includes_iva').default(false), // Barristas: ya incluye IVA, No Barristas: +IVA
+  currency: text('currency').default('MXN'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
 
 // Organizadores (Tenants)
 export const tenants = pgTable('tenants', {
@@ -115,6 +149,17 @@ export const attendees = pgTable('attendees', {
   status: text('status').default('registered'), // registered, checked_in, cancelled
   checkedInAt: timestamp('checked_in_at'),
   qrCode: text('qr_code'),
+
+  // ========== CAMPOS BMA 2026 ==========
+  packageId: uuid('package_id').references(() => packages.id), // Paquete seleccionado
+  isBarrista: boolean('is_barrista').default(false), // ¿Es miembro de la BMA?
+  barristaNumber: text('barrista_number'), // Número de cédula/registro de barrista
+  paymentStatus: text('payment_status').default('pending'), // pending, paid, refunded
+  paymentDate: timestamp('payment_date'), // Fecha de confirmación de pago
+  paymentReference: text('payment_reference'), // Referencia de pago de intranet BMA
+  priceAtRegistration: decimal('price_at_registration', { precision: 10, scale: 2 }), // Precio al momento de registro
+  // =====================================
+
   // Campos para networking
   bio: text('bio'),
   interests: text('interests').array(),
@@ -215,8 +260,21 @@ export const sessionsRelations = relations(sessions, ({ one, many }) => ({
 export const attendeesRelations = relations(attendees, ({ one, many }) => ({
   event: one(events, { fields: [attendees.eventId], references: [events.id] }),
   user: one(users, { fields: [attendees.userId], references: [users.id] }),
+  package: one(packages, { fields: [attendees.packageId], references: [packages.id] }),
   sessions: many(attendeeSessions),
   points: many(attendeePoints),
+}));
+
+// Relaciones de packages
+export const packagesRelations = relations(packages, ({ one, many }) => ({
+  tenant: one(tenants, { fields: [packages.tenantId], references: [tenants.id] }),
+  event: one(events, { fields: [packages.eventId], references: [events.id] }),
+  pricing: many(packagePricing),
+  attendees: many(attendees),
+}));
+
+export const packagePricingRelations = relations(packagePricing, ({ one }) => ({
+  package: one(packages, { fields: [packagePricing.packageId], references: [packages.id] }),
 }));
 
 // ============================================
@@ -243,3 +301,10 @@ export type NewNetworkingMatch = typeof networkingMatches.$inferInsert;
 
 export type Beacon = typeof beacons.$inferSelect;
 export type NewBeacon = typeof beacons.$inferInsert;
+
+// BMA 2026 Types
+export type Package = typeof packages.$inferSelect;
+export type NewPackage = typeof packages.$inferInsert;
+
+export type PackagePricing = typeof packagePricing.$inferSelect;
+export type NewPackagePricing = typeof packagePricing.$inferInsert;

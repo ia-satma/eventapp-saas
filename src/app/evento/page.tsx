@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,18 +16,12 @@ import {
   Gavel,
   BookOpen,
   Award,
-  ChevronRight,
   ExternalLink,
   Phone,
   Mail,
   Globe,
-  Linkedin,
-  Twitter,
-  Play,
   Star,
-  TrendingUp,
   Shield,
-  Briefcase,
   GraduationCap,
   Landmark,
   FileText,
@@ -41,6 +34,12 @@ import {
   Mic,
   Monitor,
   Presentation,
+  Check,
+  Hotel,
+  Car,
+  Wifi,
+  UtensilsCrossed,
+  Dumbbell,
 } from "lucide-react";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
@@ -68,7 +67,7 @@ interface AgendaDay {
 
 // Datos del evento
 const EVENT_DATA = {
-  name: "XX Congreso Nacional de Abogados BMA 2026",
+  name: "XX Congreso Nacional de la Abogacía",
   tagline: "Derecho y justicia en tiempos de reformas",
   description: "El epicentro del liderazgo jurídico en México. Únete a más de 600 participantes y 80 conferencistas destacados en el evento legal más importante del país.",
   dates: {
@@ -77,60 +76,14 @@ const EVENT_DATA = {
     year: 2026,
   },
   location: {
-    venue: "Parque Fundidora - Nave Lewis",
-    address: "Av. Fundidora y Adolfo Prieto S/N",
+    venue: "Cintermex",
+    address: "Av. Fundidora 501, Obrera",
     city: "Monterrey, Nuevo León",
     postalCode: "64010",
     country: "México",
-    coordinates: { lat: 25.6784, lng: -100.2842 },
   },
-  stats: {
-    attendees: 600,
-    speakers: 80,
-    sessions: 45,
-    networkingHours: 20,
-  },
-  tickets: [
-    {
-      name: "Social (Acompañantes)",
-      price: 10440,
-      features: [
-        "Acceso a eventos sociales",
-        "Cena de gala",
-        "Coctel de bienvenida",
-        "Tours culturales",
-        "Kit de bienvenida",
-      ],
-    },
-    {
-      name: "Sesiones Académicas",
-      price: 15660,
-      features: [
-        "Acceso a todas las conferencias",
-        "Material didáctico digital",
-        "Certificado de participación",
-        "Coffee breaks",
-        "Acceso a grabaciones",
-        "Networking sessions",
-      ],
-      popular: true,
-    },
-    {
-      name: "Todo Incluido",
-      price: 18560,
-      features: [
-        "Todo lo de Sesiones Académicas",
-        "Todos los eventos sociales",
-        "Cena de gala VIP",
-        "Asientos preferenciales",
-        "Meet & Greet con ponentes",
-        "Acceso área VIP",
-        "Estacionamiento incluido",
-      ],
-    },
-  ],
   organizer: {
-    name: "Barra Mexicana, Colegio de Abogados",
+    name: "Barra Mexicana, Colegio de Abogados A.C.",
     founded: 1922,
     phone: "55 5208-3115",
     email: "acruz@bma.org.mx",
@@ -138,7 +91,69 @@ const EVENT_DATA = {
   },
 };
 
-// Agenda del evento (ejemplo profesional)
+// Hoteles sede
+const HOTELS = [
+  {
+    name: "Hilton Monterrey Valle",
+    stars: 5,
+    distance: "10 min del venue",
+    address: "Av. Diego Rivera 500, Valle Oriente",
+    features: ["Transporte incluido", "Desayuno buffet", "WiFi gratis", "Gym y Spa"],
+    priceRange: "Desde $2,800/noche",
+    phone: "+52 81 8133 7300",
+    website: "https://www.hilton.com",
+    image: "/hotels/hilton.jpg",
+  },
+  {
+    name: "Westin Monterrey Valle",
+    stars: 5,
+    distance: "12 min del venue",
+    address: "Av. Diego Rivera 1000, Valle Oriente",
+    features: ["Transporte incluido", "Heavenly Bed", "WiFi gratis", "Restaurante gourmet"],
+    priceRange: "Desde $2,600/noche",
+    phone: "+52 81 8368 6000",
+    website: "https://www.marriott.com",
+    image: "/hotels/westin.jpg",
+  },
+  {
+    name: "Camino Real Monterrey",
+    stars: 5,
+    distance: "8 min del venue",
+    address: "Av. Diego Rivera 2000, Valle Oriente",
+    features: ["Transporte incluido", "Pool & Gym", "WiFi gratis", "Business Center"],
+    priceRange: "Desde $2,200/noche",
+    phone: "+52 81 8368 1000",
+    website: "https://www.caminoreal.com",
+    image: "/hotels/camino.jpg",
+  },
+];
+
+// Paquetes resumidos para la landing
+const PACKAGES_PREVIEW = [
+  {
+    name: "TODO INCLUIDO",
+    priceBarrista: "$14,000",
+    priceNoBarrista: "$16,000 + IVA",
+    features: ["Sesiones académicas", "Cena de Gala", "Comidas 3 días", "Transporte", "Kit completo"],
+    popular: true,
+  },
+  {
+    name: "SESIONES ACADÉMICAS",
+    priceBarrista: "$12,000",
+    priceNoBarrista: "$13,500 + IVA",
+    features: ["Sesiones académicas", "Coffee breaks", "Material digital", "Certificado"],
+    popular: false,
+  },
+  {
+    name: "ACOMPAÑANTES",
+    priceBarrista: "$7,300",
+    priceNoBarrista: "$9,000 + IVA",
+    features: ["Cena de Gala", "Comidas 3 días", "Tours recreativos", "Transporte"],
+    popular: false,
+  },
+];
+
+// Agenda del evento
 const AGENDA: Record<string, AgendaDay> = {
   "19-feb": {
     day: "Jueves 19",
@@ -166,7 +181,6 @@ const AGENDA: Record<string, AgendaDay> = {
         type: "magistral",
         location: "Auditorio Principal",
         speaker: "Min. Norma Lucía Piña Hernández",
-        description: "Análisis profundo del impacto de las reformas constitucionales recientes en el sistema de justicia mexicano.",
         icon: Gavel,
       },
       {
@@ -181,15 +195,14 @@ const AGENDA: Record<string, AgendaDay> = {
         title: "Panel: Reforma Judicial - Retos y Oportunidades",
         type: "panel",
         location: "Auditorio Principal",
-        panelists: ["Dr. Diego Valadés", "Mtra. Ana Laura Magaloni", "Lic. Juan Luis González Alcántara"],
-        description: "Debate sobre la elección de jueces, autonomía judicial y acceso a la justicia.",
+        panelists: ["Dr. Diego Valadés", "Mtra. Ana Laura Magaloni", "Lic. Juan Luis González"],
         icon: Users,
       },
       {
         time: "13:00 - 15:00",
         title: "Comida",
         type: "social",
-        location: "Restaurante Nave Lewis",
+        location: "Restaurante Principal",
         icon: Utensils,
       },
       {
@@ -206,31 +219,11 @@ const AGENDA: Record<string, AgendaDay> = {
         icon: Presentation,
       },
       {
-        time: "16:30 - 17:00",
-        title: "Coffee Break",
-        type: "networking",
-        location: "Área de Exposición",
-        icon: Coffee,
-      },
-      {
-        time: "17:00 - 18:30",
-        title: "Sesiones Paralelas - Bloque B",
-        type: "paralelas",
-        location: "Salas 1-4",
-        tracks: [
-          { name: "Derecho Fiscal", room: "Sala 1" },
-          { name: "Derecho Laboral", room: "Sala 2" },
-          { name: "Arbitraje Internacional", room: "Sala 3" },
-          { name: "Compliance y Anticorrupción", room: "Sala 4" },
-        ],
-        icon: Presentation,
-      },
-      {
         time: "19:00 - 22:00",
-        title: "Coctel de Bienvenida",
+        title: "Cóctel de Bienvenida",
         type: "social",
-        location: "Terraza Fundidora",
-        description: "Evento de networking con música en vivo y gastronomía regional.",
+        location: "Terraza",
+        description: "Evento de networking con música en vivo.",
         icon: Music,
       },
     ],
@@ -253,7 +246,6 @@ const AGENDA: Record<string, AgendaDay> = {
         type: "magistral",
         location: "Auditorio Principal",
         speaker: "Dr. Richard Susskind",
-        description: "Cómo la IA está transformando la profesión legal y qué habilidades necesitarán los abogados del futuro.",
         icon: Monitor,
       },
       {
@@ -261,7 +253,6 @@ const AGENDA: Record<string, AgendaDay> = {
         title: "Coffee Break & Demo Zone",
         type: "networking",
         location: "Área de Exposición",
-        description: "Demostración de herramientas LegalTech.",
         icon: Coffee,
       },
       {
@@ -269,21 +260,18 @@ const AGENDA: Record<string, AgendaDay> = {
         title: "Panel: LegalTech - Casos de Éxito en México",
         type: "panel",
         location: "Auditorio Principal",
-        panelists: ["Lic. Andrea Porras", "Ing. Ricardo Blanco", "Lic. María Fernanda Garza"],
-        description: "Experiencias reales de implementación de tecnología en despachos mexicanos.",
-        icon: TrendingUp,
+        icon: Network,
       },
       {
         time: "13:00 - 15:00",
         title: "Comida de Networking por Especialidad",
         type: "social",
         location: "Mesas Temáticas",
-        description: "Comida organizada por área de práctica para facilitar conexiones relevantes.",
-        icon: Network,
+        icon: Utensils,
       },
       {
-        time: "15:00 - 16:30",
-        title: "Sesiones Paralelas - Bloque C",
+        time: "15:00 - 18:30",
+        title: "Sesiones Paralelas y Workshops",
         type: "paralelas",
         location: "Salas 1-4",
         tracks: [
@@ -295,27 +283,11 @@ const AGENDA: Record<string, AgendaDay> = {
         icon: Presentation,
       },
       {
-        time: "16:30 - 17:00",
-        title: "Coffee Break",
-        type: "networking",
-        location: "Área de Exposición",
-        icon: Coffee,
-      },
-      {
-        time: "17:00 - 18:30",
-        title: "Workshop: Herramientas de IA para Abogados",
-        type: "workshop",
-        location: "Sala de Capacitación",
-        speaker: "Equipo LegalTech BMA",
-        description: "Sesión práctica hands-on con las principales herramientas de IA para investigación jurídica.",
-        icon: GraduationCap,
-      },
-      {
         time: "20:00 - 00:00",
         title: "Cena de Gala",
         type: "gala",
         location: "Salón Monterrey",
-        description: "Cena formal con premiación a la trayectoria, entretenimiento y baile.",
+        description: "Cena formal con premiación a la trayectoria y baile.",
         dresscode: "Etiqueta",
         icon: Star,
       },
@@ -339,7 +311,6 @@ const AGENDA: Record<string, AgendaDay> = {
         type: "magistral",
         location: "Auditorio Principal",
         speaker: "Dr. Miguel Carbonell",
-        description: "Los nuevos dilemas éticos que enfrentan los abogados en un mundo hiperconectado.",
         icon: Shield,
       },
       {
@@ -354,15 +325,13 @@ const AGENDA: Record<string, AgendaDay> = {
         title: "Panel: ESG y Responsabilidad Corporativa",
         type: "panel",
         location: "Auditorio Principal",
-        panelists: ["Lic. Gabriela Rodríguez", "Dr. Eduardo Bohórquez", "Mtra. Patricia Aued"],
-        description: "El rol del abogado en sostenibilidad, gobernanza corporativa y responsabilidad social.",
         icon: Landmark,
       },
       {
         time: "13:00 - 14:30",
         title: "Brunch de Clausura",
         type: "social",
-        location: "Terraza Fundidora",
+        location: "Terraza",
         icon: Utensils,
       },
       {
@@ -386,181 +355,74 @@ const AGENDA: Record<string, AgendaDay> = {
         title: "Tour Cultural: Monterrey Histórico",
         type: "social",
         location: "Punto de encuentro: Lobby",
-        description: "Recorrido opcional por sitios emblemáticos de Monterrey (incluido en paquete Todo Incluido).",
+        description: "Recorrido opcional (incluido en paquete Todo Incluido).",
         icon: Camera,
       },
     ],
   },
 };
 
-// Speakers destacados
-const SPEAKERS = [
-  {
-    name: "Min. Norma Lucía Piña Hernández",
-    title: "Ministra de la Suprema Corte de Justicia de la Nación",
-    organization: "SCJN",
-    topic: "Estado de Derecho y Reformas Constitucionales",
-    image: "/speakers/speaker-1.jpg",
-    bio: "Primera mujer en presidir la Suprema Corte de Justicia de la Nación. Destacada jurista con más de 30 años de carrera judicial.",
-    social: { linkedin: "#", twitter: "#" },
-    featured: true,
-  },
-  {
-    name: "Dr. Richard Susskind",
-    title: "Futurista Legal & Autor",
-    organization: "Oxford University",
-    topic: "Inteligencia Artificial en la Práctica Jurídica",
-    image: "/speakers/speaker-2.jpg",
-    bio: "Autor de 'The End of Lawyers?' y asesor tecnológico del Lord Chief Justice de Inglaterra. Visionario del futuro de la profesión legal.",
-    social: { linkedin: "#", twitter: "#" },
-    featured: true,
-  },
-  {
-    name: "Dr. Diego Valadés",
-    title: "Investigador Emérito",
-    organization: "UNAM - Instituto de Investigaciones Jurídicas",
-    topic: "Reforma Judicial y Autonomía",
-    image: "/speakers/speaker-3.jpg",
-    bio: "Ex Procurador General de la República. Autor de más de 40 libros sobre derecho constitucional.",
-    social: { linkedin: "#" },
-    featured: true,
-  },
-  {
-    name: "Dr. Miguel Carbonell",
-    title: "Investigador del IIJ-UNAM",
-    organization: "UNAM",
-    topic: "Ética Profesional en la Era Digital",
-    image: "/speakers/speaker-4.jpg",
-    bio: "Uno de los constitucionalistas más influyentes de México. Autor prolífico y conferencista internacional.",
-    social: { linkedin: "#", twitter: "#" },
-    featured: true,
-  },
-  {
-    name: "Mtra. Ana Laura Magaloni",
-    title: "Directora División de Estudios Jurídicos",
-    organization: "CIDE",
-    topic: "Acceso a la Justicia",
-    image: "/speakers/speaker-5.jpg",
-    bio: "Especialista en sistemas de justicia y políticas públicas judiciales.",
-    social: { linkedin: "#" },
-  },
-  {
-    name: "Lic. Juan Luis González Alcántara",
-    title: "Ministro de la SCJN",
-    organization: "Suprema Corte de Justicia",
-    topic: "Independencia Judicial",
-    image: "/speakers/speaker-6.jpg",
-    bio: "Ministro de la Suprema Corte desde 2018. Especialista en derechos humanos y justicia constitucional.",
-    social: { linkedin: "#" },
-  },
-  {
-    name: "Lic. Andrea Porras",
-    title: "CEO & Founder",
-    organization: "LegalTech MX",
-    topic: "Transformación Digital en Despachos",
-    image: "/speakers/speaker-7.jpg",
-    bio: "Emprendedora pionera en LegalTech en Latinoamérica. Forbes 30 Under 30.",
-    social: { linkedin: "#", twitter: "#" },
-  },
-  {
-    name: "Dr. Eduardo Bohórquez",
-    title: "Director Ejecutivo",
-    organization: "Transparencia Mexicana",
-    topic: "ESG y Anticorrupción",
-    image: "/speakers/speaker-8.jpg",
-    bio: "Líder en temas de transparencia y combate a la corrupción. Asesor de organismos internacionales.",
-    social: { linkedin: "#", twitter: "#" },
-  },
-];
-
-// Patrocinadores
-const SPONSORS = {
-  platinum: [
-    { name: "Baker McKenzie", logo: "/sponsors/baker.png" },
-    { name: "Galicia Abogados", logo: "/sponsors/galicia.png" },
-  ],
-  gold: [
-    { name: "Von Wobeser", logo: "/sponsors/vw.png" },
-    { name: "Creel García-Cuéllar", logo: "/sponsors/creel.png" },
-    { name: "Basham, Ringe y Correa", logo: "/sponsors/basham.png" },
-  ],
-  silver: [
-    { name: "Sánchez Devanny", logo: "/sponsors/sd.png" },
-    { name: "Mijares Angoitia", logo: "/sponsors/ma.png" },
-    { name: "González Calvillo", logo: "/sponsors/gc.png" },
-    { name: "Nader Hayaux", logo: "/sponsors/nh.png" },
-  ],
-};
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("es-MX", {
-    style: "currency",
-    currency: "MXN",
-    minimumFractionDigits: 0,
-  }).format(price);
-}
-
 function getSessionColor(type: string) {
   const colors: Record<string, string> = {
-    magistral: "bg-purple-500/10 text-purple-400 border-purple-500/30",
-    panel: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-    paralelas: "bg-green-500/10 text-green-400 border-green-500/30",
-    workshop: "bg-orange-500/10 text-orange-400 border-orange-500/30",
-    networking: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-    social: "bg-pink-500/10 text-pink-400 border-pink-500/30",
-    gala: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-    registro: "bg-gray-500/10 text-gray-400 border-gray-500/30",
-    ceremonia: "bg-red-500/10 text-red-400 border-red-500/30",
-    asamblea: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
+    magistral: "bg-primary/10 text-primary border-primary/30",
+    panel: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30",
+    paralelas: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/30",
+    workshop: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30",
+    networking: "bg-accent/20 text-accent-foreground border-accent/30",
+    social: "bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/30",
+    gala: "bg-primary/10 text-primary border-primary/30",
+    registro: "bg-muted text-muted-foreground border-border",
+    ceremonia: "bg-primary/10 text-primary border-primary/30",
+    asamblea: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/30",
   };
-  return colors[type] || "bg-gray-500/10 text-gray-400 border-gray-500/30";
+  return colors[type] || "bg-muted text-muted-foreground border-border";
 }
 
 export default function EventoPage() {
   const [selectedDay, setSelectedDay] = useState("19-feb");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-background">
       {/* Header/Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-lg">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo BMA */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
-                <Scale className="w-6 h-6 text-black" />
+            <Link href="/evento" className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <Scale className="w-6 h-6 text-primary-foreground" />
               </div>
               <div className="hidden sm:block">
-                <div className="text-white font-bold leading-tight">Barra Mexicana</div>
-                <div className="text-amber-400 text-xs">Colegio de Abogados</div>
+                <div className="text-foreground font-bold leading-tight">Barra Mexicana</div>
+                <div className="text-accent-foreground text-xs font-medium">Colegio de Abogados</div>
               </div>
             </Link>
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6">
-              <Link href="#agenda" className="text-sm text-slate-300 hover:text-amber-400 transition-colors">
+              <Link href="#programa" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Programa
               </Link>
-              <Link href="#ponentes" className="text-sm text-slate-300 hover:text-amber-400 transition-colors">
-                Ponentes
+              <Link href="#hoteles" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Hoteles
               </Link>
-              <Link href="#registro" className="text-sm text-slate-300 hover:text-amber-400 transition-colors">
-                Inscripción
+              <Link href="#paquetes" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Paquetes
               </Link>
-              <Link href="https://www.bma.org.mx" target="_blank" className="text-sm text-slate-300 hover:text-amber-400 transition-colors flex items-center gap-1">
+              <Link href="https://www.bma.org.mx" target="_blank" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
                 BMA.org.mx <ExternalLink className="w-3 h-3" />
               </Link>
             </nav>
 
             {/* CTA */}
             <div className="flex items-center gap-3">
-              <Link href="/login" className="hidden sm:block">
-                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/10">
-                  Mi Cuenta
+              <Link href="/admin/asistentes" className="hidden sm:block">
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  Admin
                 </Button>
               </Link>
-              <Link href="#registro">
-                <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">
+              <Link href="/inscripcion">
+                <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                   <Ticket className="w-4 h-4 mr-1" />
                   Inscribirme
                 </Button>
@@ -571,47 +433,42 @@ export default function EventoPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-16">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10" />
+      <section className="relative overflow-hidden pt-16 bg-gradient-to-b from-primary/5 via-background to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
 
-        {/* Content */}
-        <div className="relative container mx-auto px-4 py-24">
+        <div className="relative container mx-auto px-4 py-20 md:py-28">
           {/* Badges */}
           <div className="flex flex-wrap gap-3 justify-center mb-8">
-            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 px-4 py-1">
+            <Badge className="bg-primary/10 text-primary border-primary/30 px-4 py-1">
               <Scale className="w-3 h-3 mr-1" /> XX Edición
             </Badge>
-            <Badge className="bg-white/10 text-white border-white/20 px-4 py-1">
+            <Badge variant="outline" className="px-4 py-1">
               <Calendar className="w-3 h-3 mr-1" /> 19-21 Feb 2026
             </Badge>
-            <Badge className="bg-white/10 text-white border-white/20 px-4 py-1">
+            <Badge variant="outline" className="px-4 py-1">
               <MapPin className="w-3 h-3 mr-1" /> Monterrey, NL
             </Badge>
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-center text-white mb-6 tracking-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-center text-foreground mb-6 tracking-tight">
             XX Congreso Nacional
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">
-              de Abogados BMA
-            </span>
+            <span className="text-primary">de la Abogacía</span>
           </h1>
 
           {/* Tagline */}
-          <p className="text-xl md:text-2xl text-amber-200/80 text-center mb-4 font-light">
+          <p className="text-xl md:text-2xl text-muted-foreground text-center mb-4 font-light">
             "{EVENT_DATA.tagline}"
           </p>
 
           {/* Description */}
-          <p className="text-lg text-slate-400 text-center max-w-3xl mx-auto mb-12">
+          <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-12">
             {EVENT_DATA.description}
           </p>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
             {[
               { icon: Users, value: "600+", label: "Asistentes" },
               { icon: Mic, value: "80+", label: "Conferencistas" },
@@ -620,25 +477,25 @@ export default function EventoPage() {
             ].map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 text-center"
+                className="bg-card border border-border rounded-2xl p-6 text-center"
               >
-                <stat.icon className="w-8 h-8 text-amber-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
+                <stat.icon className="w-8 h-8 text-primary mx-auto mb-3" />
+                <div className="text-3xl font-bold text-foreground mb-1">{stat.value}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </div>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="#registro">
-              <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-lg px-8 h-14">
+            <Link href="/inscripcion">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-8 h-14">
                 <Ticket className="w-5 h-5 mr-2" />
                 Inscribirme Ahora
               </Button>
             </Link>
-            <Link href="#agenda">
-              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 h-14">
+            <Link href="#programa">
+              <Button size="lg" variant="outline" className="text-lg px-8 h-14">
                 <Calendar className="w-5 h-5 mr-2" />
                 Ver Programa
               </Button>
@@ -648,56 +505,44 @@ export default function EventoPage() {
       </section>
 
       {/* Location Section */}
-      <section className="py-20 bg-slate-900/50">
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
+              <Badge className="bg-primary/10 text-primary border-primary/30 mb-4">
                 <MapPin className="w-3 h-3 mr-1" /> Sede del Evento
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 {EVENT_DATA.location.venue}
               </h2>
-              <div className="space-y-4 text-slate-300">
+              <div className="space-y-4 text-muted-foreground">
                 <p className="flex items-start gap-3">
-                  <Building2 className="w-5 h-5 text-amber-400 mt-1" />
+                  <Building2 className="w-5 h-5 text-primary mt-1" />
                   <span>
                     {EVENT_DATA.location.address}
                     <br />
                     {EVENT_DATA.location.city}, CP {EVENT_DATA.location.postalCode}
-                    <br />
-                    {EVENT_DATA.location.country}
                   </span>
                 </p>
                 <p className="flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-amber-400 mt-1" />
+                  <Clock className="w-5 h-5 text-primary mt-1" />
                   <span>
-                    <strong className="text-white">Fechas:</strong> {EVENT_DATA.dates.start} al {EVENT_DATA.dates.end}
+                    <strong className="text-foreground">Fechas:</strong> {EVENT_DATA.dates.start} al {EVENT_DATA.dates.end}
                   </span>
                 </p>
               </div>
-              <div className="mt-8 flex gap-4">
-                <Button className="bg-white/10 hover:bg-white/20 text-white">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Ver en Mapa
-                </Button>
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Hoteles Cercanos
-                </Button>
-              </div>
             </div>
             <div className="relative">
-              <div className="aspect-video bg-slate-800 rounded-2xl overflow-hidden border border-white/10">
+              <div className="aspect-video bg-muted rounded-2xl overflow-hidden border border-border">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3596.0044682244344!2d-100.28420532547844!3d25.678400477443095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8662be35e7f11d4f%3A0x5c51e8a9f1f2c2a!2sParque%20Fundidora!5e0!3m2!1sen!2smx!4v1706900000000!5m2!1sen!2smx"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3596.0044682244344!2d-100.28420532547844!3d25.678400477443095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8662bf89d5e08d03%3A0x7a5f9c2b4e8c8d0a!2sCintermex!5e0!3m2!1sen!2smx!4v1706900000000!5m2!1sen!2smx"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                  className="opacity-90 hover:opacity-100 transition-all duration-500"
                 />
               </div>
             </div>
@@ -705,29 +550,29 @@ export default function EventoPage() {
         </div>
       </section>
 
-      {/* Agenda Section */}
-      <section id="agenda" className="py-20">
+      {/* Programa/Agenda Section */}
+      <section id="programa" className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
+            <Badge className="bg-primary/10 text-primary border-primary/30 mb-4">
               <Calendar className="w-3 h-3 mr-1" /> Programa
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Agenda del Congreso
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Tres días intensivos de conocimiento, networking y experiencias inolvidables
             </p>
           </div>
 
           {/* Day Tabs */}
           <Tabs value={selectedDay} onValueChange={setSelectedDay} className="w-full">
-            <TabsList className="grid grid-cols-3 max-w-2xl mx-auto mb-8 bg-slate-800/50 p-1 rounded-xl">
+            <TabsList className="grid grid-cols-3 max-w-2xl mx-auto mb-8 bg-muted p-1 rounded-xl">
               {Object.entries(AGENDA).map(([key, day]) => (
                 <TabsTrigger
                   key={key}
                   value={key}
-                  className="data-[state=active]:bg-amber-500 data-[state=active]:text-black rounded-lg py-3"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg py-3"
                 >
                   <div className="text-center">
                     <div className="font-semibold">{day.day}</div>
@@ -740,7 +585,7 @@ export default function EventoPage() {
             {Object.entries(AGENDA).map(([key, day]) => (
               <TabsContent key={key} value={key}>
                 <div className="mb-6 text-center">
-                  <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                  <Badge variant="secondary">
                     <BookOpen className="w-3 h-3 mr-1" /> {day.theme}
                   </Badge>
                 </div>
@@ -748,9 +593,9 @@ export default function EventoPage() {
                   {day.sessions.map((session, idx) => (
                     <Card
                       key={idx}
-                      className={`bg-slate-800/50 border-slate-700/50 hover:border-amber-500/30 transition-all duration-300 overflow-hidden ${
+                      className={`hover:border-primary/30 transition-all duration-300 overflow-hidden ${
                         session.type === "magistral" || session.type === "gala"
-                          ? "border-l-4 border-l-amber-500"
+                          ? "border-l-4 border-l-primary"
                           : ""
                       }`}
                     >
@@ -758,10 +603,10 @@ export default function EventoPage() {
                         <div className="flex flex-col md:flex-row md:items-start gap-4">
                           {/* Time */}
                           <div className="flex items-center gap-3 md:w-36 shrink-0">
-                            <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-                              <session.icon className="w-5 h-5 text-amber-400" />
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <session.icon className="w-5 h-5 text-primary" />
                             </div>
-                            <span className="text-amber-400 font-mono text-sm">{session.time}</span>
+                            <span className="text-primary font-mono text-sm">{session.time}</span>
                           </div>
 
                           {/* Content */}
@@ -770,26 +615,26 @@ export default function EventoPage() {
                               <Badge className={`${getSessionColor(session.type)} text-xs`}>
                                 {session.type.charAt(0).toUpperCase() + session.type.slice(1)}
                               </Badge>
-                              <span className="text-slate-500 text-sm flex items-center gap-1">
+                              <span className="text-muted-foreground text-sm flex items-center gap-1">
                                 <MapPin className="w-3 h-3" /> {session.location}
                               </span>
                             </div>
-                            <h3 className="text-lg font-semibold text-white mb-2">
+                            <h3 className="text-lg font-semibold text-foreground mb-2">
                               {session.title}
                             </h3>
                             {session.speaker && (
-                              <p className="text-amber-300 text-sm mb-2 flex items-center gap-1">
+                              <p className="text-primary text-sm mb-2 flex items-center gap-1">
                                 <Mic className="w-3 h-3" /> {session.speaker}
                               </p>
                             )}
                             {session.panelists && (
-                              <p className="text-blue-300 text-sm mb-2">
+                              <p className="text-muted-foreground text-sm mb-2">
                                 <Users className="w-3 h-3 inline mr-1" />
                                 {session.panelists.join(" • ")}
                               </p>
                             )}
                             {session.description && (
-                              <p className="text-slate-400 text-sm">{session.description}</p>
+                              <p className="text-muted-foreground text-sm">{session.description}</p>
                             )}
                             {session.tracks && (
                               <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -798,15 +643,15 @@ export default function EventoPage() {
                                     key={tidx}
                                     className="bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2 text-xs"
                                   >
-                                    <span className="text-green-400 font-medium">{track.name}</span>
+                                    <span className="text-green-600 dark:text-green-400 font-medium">{track.name}</span>
                                     <br />
-                                    <span className="text-slate-500">{track.room}</span>
+                                    <span className="text-muted-foreground">{track.room}</span>
                                   </div>
                                 ))}
                               </div>
                             )}
                             {session.dresscode && (
-                              <Badge className="mt-2 bg-amber-500/20 text-amber-300">
+                              <Badge className="mt-2 bg-primary/10 text-primary">
                                 Dress code: {session.dresscode}
                               </Badge>
                             )}
@@ -822,255 +667,167 @@ export default function EventoPage() {
         </div>
       </section>
 
-      {/* Speakers Section */}
-      <section id="ponentes" className="py-20 bg-slate-900/50">
+      {/* Hotels Section */}
+      <section id="hoteles" className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
-              <Mic className="w-3 h-3 mr-1" /> Conferencistas
+            <Badge className="bg-primary/10 text-primary border-primary/30 mb-4">
+              <Hotel className="w-3 h-3 mr-1" /> Hospedaje
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Speakers Destacados
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Hoteles Sede
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Aprende de los líderes más influyentes del mundo jurídico
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Tarifas preferenciales para asistentes del congreso. Incluye transporte al venue.
             </p>
           </div>
 
-          {/* Featured Speakers */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {SPEAKERS.filter((s) => s.featured).map((speaker, idx) => (
-              <Card
-                key={idx}
-                className="bg-slate-800/50 border-slate-700/50 hover:border-amber-500/30 transition-all duration-300 group overflow-hidden"
-              >
-                <div className="aspect-square bg-gradient-to-br from-amber-500/20 to-slate-800 relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 rounded-full bg-slate-700 flex items-center justify-center">
-                      <Users className="w-16 h-16 text-slate-500" />
-                    </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {HOTELS.map((hotel, idx) => (
+              <Card key={idx} className="hover:border-primary/30 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-2 mb-2">
+                    {[...Array(hotel.stars)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-accent text-accent" />
+                    ))}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                  <Badge className="absolute top-4 right-4 bg-amber-500 text-black">
-                    <Star className="w-3 h-3 mr-1" /> Destacado
-                  </Badge>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-white mb-1 group-hover:text-amber-400 transition-colors">
-                    {speaker.name}
-                  </h3>
-                  <p className="text-amber-400 text-sm mb-1">{speaker.title}</p>
-                  <p className="text-slate-500 text-sm mb-3">{speaker.organization}</p>
-                  <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">
-                    {speaker.topic}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <CardTitle className="text-xl">{hotel.name}</CardTitle>
+                  <CardDescription className="flex items-center gap-1">
+                    <MapPin className="w-3 h-3" /> {hotel.distance}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">{hotel.address}</p>
 
-          {/* Other Speakers */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SPEAKERS.filter((s) => !s.featured).map((speaker, idx) => (
-              <Card
-                key={idx}
-                className="bg-slate-800/30 border-slate-700/30 hover:bg-slate-800/50 transition-all"
-              >
-                <CardContent className="p-4 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
-                    <Users className="w-6 h-6 text-slate-500" />
+                  <div className="space-y-2">
+                    {hotel.features.map((feature, fidx) => (
+                      <div key={fidx} className="flex items-center gap-2 text-sm">
+                        <Check className="w-4 h-4 text-green-500" />
+                        <span className="text-muted-foreground">{feature}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="min-w-0">
-                    <h4 className="text-white font-medium truncate">{speaker.name}</h4>
-                    <p className="text-slate-400 text-sm truncate">{speaker.organization}</p>
+
+                  <div className="pt-4 border-t border-border">
+                    <p className="text-lg font-semibold text-primary">{hotel.priceRange}</p>
+                    <p className="text-xs text-muted-foreground">Tarifa preferencial congresistas</p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <Phone className="w-3 h-3 mr-1" />
+                      Llamar
+                    </Button>
+                    <Button size="sm" className="flex-1 bg-primary hover:bg-primary/90">
+                      <ExternalLink className="w-3 h-3 mr-1" />
+                      Reservar
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-              Ver los 80+ Conferencistas
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </Button>
           </div>
         </div>
       </section>
 
-      {/* Tickets Section */}
-      <section id="registro" className="py-20">
+      {/* Packages/Tickets Section */}
+      <section id="paquetes" className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
+            <Badge className="bg-primary/10 text-primary border-primary/30 mb-4">
               <Ticket className="w-3 h-3 mr-1" /> Inscripciones
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Elige tu Experiencia
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Paquetes Disponibles
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Tres opciones diseñadas para diferentes necesidades
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Precios especiales para Barristas. Inscripción temprana hasta el 31 de diciembre.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {EVENT_DATA.tickets.map((ticket, idx) => (
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+            {PACKAGES_PREVIEW.map((pkg, idx) => (
               <Card
                 key={idx}
                 className={`relative overflow-hidden transition-all duration-300 ${
-                  ticket.popular
-                    ? "bg-gradient-to-b from-amber-500/20 to-slate-800 border-amber-500/50 scale-105 shadow-xl shadow-amber-500/10"
-                    : "bg-slate-800/50 border-slate-700/50 hover:border-amber-500/30"
+                  pkg.popular
+                    ? "border-primary shadow-lg shadow-primary/10 scale-105"
+                    : "hover:border-primary/30"
                 }`}
               >
-                {ticket.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-amber-500 text-black text-center py-1 text-sm font-semibold">
+                {pkg.popular && (
+                  <div className="absolute top-0 left-0 right-0 bg-primary text-primary-foreground text-center py-1 text-sm font-semibold">
                     Más Popular
                   </div>
                 )}
-                <CardHeader className={ticket.popular ? "pt-10" : ""}>
-                  <CardTitle className="text-white text-xl">{ticket.name}</CardTitle>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-white">{formatPrice(ticket.price)}</span>
-                    <span className="text-slate-400 ml-2">MXN</span>
+                <CardHeader className={pkg.popular ? "pt-10" : ""}>
+                  <CardTitle className="text-xl">{pkg.name}</CardTitle>
+                  <div className="mt-4 space-y-1">
+                    <div>
+                      <span className="text-2xl font-bold text-foreground">{pkg.priceBarrista}</span>
+                      <span className="text-sm text-muted-foreground ml-2">Barrista</span>
+                    </div>
+                    <div>
+                      <span className="text-lg text-muted-foreground">{pkg.priceNoBarrista}</span>
+                      <span className="text-xs text-muted-foreground ml-2">No Barrista</span>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 mb-6">
-                    {ticket.features.map((feature, fidx) => (
-                      <li key={fidx} className="flex items-start gap-3 text-slate-300">
-                        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                          <svg
-                            className="w-3 h-3 text-green-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                        <span className="text-sm">{feature}</span>
+                  <ul className="space-y-2 mb-6">
+                    {pkg.features.map((feature, fidx) => (
+                      <li key={fidx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Check className="w-4 h-4 text-green-500" />
+                        {feature}
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    className={`w-full ${
-                      ticket.popular
-                        ? "bg-amber-500 hover:bg-amber-600 text-black"
-                        : "bg-white/10 hover:bg-white/20 text-white"
-                    }`}
-                  >
-                    Inscribirme
-                  </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          <p className="text-center text-slate-500 mt-8 text-sm">
-            Precios en pesos mexicanos. Factura disponible. Opciones de pago: Tarjeta, transferencia, PayPal.
-          </p>
-        </div>
-      </section>
-
-      {/* Sponsors Section */}
-      <section className="py-20 bg-slate-900/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-4">
-              <Briefcase className="w-3 h-3 mr-1" /> Patrocinadores
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Empresas que nos Apoyan
-            </h2>
-          </div>
-
-          {/* Platinum */}
-          <div className="mb-12">
-            <h3 className="text-center text-slate-400 uppercase tracking-wider text-sm mb-6">
-              Platinum
-            </h3>
-            <div className="flex flex-wrap justify-center gap-8">
-              {SPONSORS.platinum.map((sponsor, idx) => (
-                <div
-                  key={idx}
-                  className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-8 w-64 h-32 flex items-center justify-center hover:border-amber-500/30 transition-all"
-                >
-                  <span className="text-white font-semibold text-lg">{sponsor.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Gold */}
-          <div className="mb-12">
-            <h3 className="text-center text-slate-400 uppercase tracking-wider text-sm mb-6">
-              Gold
-            </h3>
-            <div className="flex flex-wrap justify-center gap-6">
-              {SPONSORS.gold.map((sponsor, idx) => (
-                <div
-                  key={idx}
-                  className="bg-slate-800/30 border border-slate-700/30 rounded-xl p-6 w-48 h-24 flex items-center justify-center hover:border-amber-500/30 transition-all"
-                >
-                  <span className="text-slate-300 font-medium">{sponsor.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Silver */}
-          <div>
-            <h3 className="text-center text-slate-400 uppercase tracking-wider text-sm mb-6">
-              Silver
-            </h3>
-            <div className="flex flex-wrap justify-center gap-4">
-              {SPONSORS.silver.map((sponsor, idx) => (
-                <div
-                  key={idx}
-                  className="bg-slate-800/20 border border-slate-700/20 rounded-lg p-4 w-40 h-16 flex items-center justify-center hover:border-slate-600 transition-all"
-                >
-                  <span className="text-slate-400 text-sm">{sponsor.name}</span>
-                </div>
-              ))}
-            </div>
+          <div className="text-center">
+            <Link href="/inscripcion">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                <Ticket className="w-5 h-5 mr-2" />
+                Ver Precios y Registrarme
+              </Button>
+            </Link>
+            <p className="text-sm text-muted-foreground mt-4">
+              Precios en pesos mexicanos. Barristas incluyen IVA.
+            </p>
           </div>
         </div>
       </section>
 
       {/* Contact/Organizer Section */}
-      <section className="py-20">
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <Card className="bg-gradient-to-r from-amber-500/10 to-slate-800 border-amber-500/20 max-w-4xl mx-auto">
+          <Card className="bg-gradient-to-r from-primary/5 to-card border-primary/20 max-w-4xl mx-auto">
             <CardContent className="p-8 md:p-12">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                  <Badge className="bg-white/10 text-white border-white/20 mb-4">
+                  <Badge variant="outline" className="mb-4">
                     <Building2 className="w-3 h-3 mr-1" /> Organizador
                   </Badge>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                     {EVENT_DATA.organizer.name}
                   </h2>
-                  <p className="text-slate-400 mb-6">
-                    Fundada en {EVENT_DATA.organizer.founded}. El colegio de abogados más prestigioso de México,
-                    comprometido con la excelencia en la práctica jurídica.
+                  <p className="text-muted-foreground mb-6">
+                    Fundada en {EVENT_DATA.organizer.founded}. El colegio de abogados más prestigioso de México.
                   </p>
                   <div className="space-y-3">
                     <a
                       href={`tel:${EVENT_DATA.organizer.phone}`}
-                      className="flex items-center gap-3 text-slate-300 hover:text-amber-400 transition-colors"
+                      className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
                     >
                       <Phone className="w-5 h-5" />
                       {EVENT_DATA.organizer.phone}
                     </a>
                     <a
                       href={`mailto:${EVENT_DATA.organizer.email}`}
-                      className="flex items-center gap-3 text-slate-300 hover:text-amber-400 transition-colors"
+                      className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
                     >
                       <Mail className="w-5 h-5" />
                       {EVENT_DATA.organizer.email}
@@ -1079,7 +836,7 @@ export default function EventoPage() {
                       href={EVENT_DATA.organizer.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 text-slate-300 hover:text-amber-400 transition-colors"
+                      className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
                     >
                       <Globe className="w-5 h-5" />
                       www.bma.org.mx
@@ -1088,18 +845,14 @@ export default function EventoPage() {
                 </div>
                 <div className="flex flex-col gap-4">
                   <Link href="https://congresobma2026.com/" target="_blank">
-                    <Button size="lg" className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold">
+                    <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                       <ExternalLink className="w-5 h-5 mr-2" />
                       Sitio Oficial del Congreso
                     </Button>
                   </Link>
-                  <Button size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Button size="lg" variant="outline" className="w-full">
                     <MessageSquare className="w-5 h-5 mr-2" />
                     Contactar Organizadores
-                  </Button>
-                  <Button size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-                    <FileText className="w-5 h-5 mr-2" />
-                    Descargar Programa PDF
                   </Button>
                 </div>
               </div>
@@ -1109,51 +862,52 @@ export default function EventoPage() {
       </section>
 
       {/* CTA Final */}
-      <section className="py-20 bg-gradient-to-b from-slate-900 to-amber-950/20">
+      <section className="py-20 bg-gradient-to-b from-background to-primary/5">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
             ¿Nos vemos en Monterrey?
           </h2>
-          <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Sé parte de la comunidad jurídica más influyente de México.
-            Los cupos son limitados.
           </p>
-          <Link href="#registro">
-            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-lg px-12 h-16">
+          <Link href="/inscripcion">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-12 h-16">
               <Ticket className="w-6 h-6 mr-2" />
               Reservar mi Lugar
             </Button>
           </Link>
-          <p className="text-slate-500 mt-4 text-sm">
-            Inscríbete antes del 31 de enero y obtén 10% de descuento
+          <p className="text-muted-foreground mt-4 text-sm">
+            Precio temprano hasta el 31 de diciembre de 2025
           </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 bg-slate-950 py-12">
+      <footer className="border-t border-border bg-card py-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
-              <Scale className="w-8 h-8 text-amber-500" />
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <Scale className="w-6 h-6 text-primary-foreground" />
+              </div>
               <div>
-                <div className="font-bold text-white">BMA 2026</div>
-                <div className="text-sm text-slate-500">XX Congreso Nacional</div>
+                <div className="font-bold text-foreground">BMA 2026</div>
+                <div className="text-sm text-muted-foreground">XX Congreso Nacional</div>
               </div>
             </div>
-            <div className="flex gap-6 text-sm text-slate-500">
-              <Link href="#" className="hover:text-amber-400 transition-colors">
+            <div className="flex gap-6 text-sm text-muted-foreground">
+              <Link href="#" className="hover:text-primary transition-colors">
                 Privacidad
               </Link>
-              <Link href="#" className="hover:text-amber-400 transition-colors">
+              <Link href="#" className="hover:text-primary transition-colors">
                 Términos
               </Link>
-              <Link href="#" className="hover:text-amber-400 transition-colors">
-                Código de Conducta
+              <Link href="/admin/asistentes" className="hover:text-primary transition-colors">
+                Admin
               </Link>
             </div>
-            <div className="text-sm text-slate-500">
-              © 2026 Barra Mexicana de Abogados
+            <div className="text-sm text-muted-foreground">
+              © 2026 Barra Mexicana, Colegio de Abogados A.C.
             </div>
           </div>
         </div>
